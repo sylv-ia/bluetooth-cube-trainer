@@ -1,0 +1,20 @@
+body {
+    height: 100%;
+    width: 100%;
+    background-color: #222;
+}
+
+#connectButton {
+    border: 1px solid pink;
+    color: white;
+    width: 80px;
+    text-align: center;
+    padding: 10px;
+    border-radius: 15px;
+    cursor: pointer;
+}
+
+.cube {
+    width: 500px;
+    height: 500px;
+}
