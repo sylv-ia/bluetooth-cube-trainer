@@ -18,6 +18,16 @@ const getSelected = () => {
     selectedCount = selectedCountStorage ? JSON.parse(selectedCountStorage) : {};
 }
 
+const updateCountColors = (element, counter) => {
+    if (counter.count == counter.total) {
+        element.style.backgroundColor = 'green';
+    } else if (counter.count > 0) {
+        element.style.backgroundColor = '#E18700';
+    } else {
+        element.style.backgroundColor = 'transparent';
+    }
+}
+
 const selectAlg = (code) => {
     selected.push(code);
     const parts = code.split('-');
@@ -29,6 +39,7 @@ const selectAlg = (code) => {
         codeSoFar += (i == 0 ? part : '-' + part);
         Array.from(document.querySelectorAll(`#${codeSoFar}`)).forEach(element => {
             element.innerHTML = section[part]['count'];
+            updateCountColors(element.parentNode.parentNode, section[part]);
         })
 
         section = section[part]['subs']
@@ -48,6 +59,7 @@ const removeAlg = (code) => {
         codeSoFar += (i == 0 ? part : '-' + part);
         Array.from(document.querySelectorAll(`#${codeSoFar}`)).forEach(element => {
             element.innerHTML = section[part]['count'];
+            updateCountColors(element.parentNode.parentNode, section[part]);
         })
 
         section = section[part]['subs']
@@ -133,6 +145,7 @@ const createSetElements = (sub, i = 0, code = '') => {
         const counter = createElementWithClasses('div', ['algCount'], `<div id='${subCode}' class='count'>${count}</div>
                                                                         <div class='slash'>/</div>
                                                                         <div class='total'>${total}</div>`)
+        updateCountColors(head, { count, total })
         head.append(counter);
         subWrapper.append(head);
 
