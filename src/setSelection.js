@@ -13,10 +13,14 @@ const getAlg = (code) => {
     return alg;
 }
 
+/*
 const selectedStorage = localStorage.getItem('selected');
 const selected = selectedStorage ? selectedStorage.split(',') : [];
 const selectedCountStorage = localStorage.getItem('selectedCount');
 const selectedCount = selectedCountStorage ? JSON.parse(selectedCountStorage) : {};
+*/
+const selected = [];
+const selectedCount = {};
 
 const setCounters = () => {
 
@@ -137,10 +141,7 @@ const initSets = () => {
 
                     cubesWrapper.append(cubeImgBox);
                     if (selected.includes(code)) {
-                        window.onload = () => {
                             cubeImgBox.click();
-
-                        }
                     }
 
                 })
