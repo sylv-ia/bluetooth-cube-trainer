@@ -1,5 +1,5 @@
 body {
-    height: 100vh;
+    min-height: 100vh;
     width: 100vw;
     background-color: #111;
     color: #ddd;
@@ -19,10 +19,11 @@ body {
     flex: 1;
     text-align: center;
     padding: 20px;
+    min-height: 100vh;
 }
 
 #center {
-    flex: 4;
+    flex: 2;
     text-align: center;
     padding: 20px;
     text-align: center;
@@ -54,5 +55,7 @@ body {
 #cube {
     height: 400px;
     width: 400px;
-    
 }
+
+
+

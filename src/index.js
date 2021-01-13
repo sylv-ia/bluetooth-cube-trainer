@@ -1,3 +1,7 @@
+const randomFromArray = (arr) => {
+    return arr[Math.floor(Math.random() * arr.length)];
+}
+
 const cube = {
     colors: {
         'U': '#E5E521',
@@ -74,7 +78,7 @@ const cube = {
             cube.shouldUpdateSVG = true;
             cube.clearHistory();
             cube.reset();
-            random2GLL();
+            randomFromSelected();
             clearMessage();
         }
 
@@ -100,29 +104,21 @@ const clearMessage = () => {
     messageDiv.innerHTML = '.';
 }
 
-cube.init();
-
-const randomFromArray = (arr) => {
-    return arr[Math.floor(Math.random() * arr.length)];
-}
-
-const random2GLL = () => {
-    const cat = randomFromArray(['T', 'U', 'L', 'Pi', 'H']);
-    let set = 1;
-    const alg = randomFromArray(zbll[cat][cat + set])
-
-    console.log(alg);
-
+const randomFromSelected = () => {
+    const algCode = randomFromArray(selected);
+    const alg = getAlg(algCode);
     cube.setUpCase(alg);
 }
 
-random2GLL()
+cube.init();
 
+if (selected.length != 0) {
+    randomFromSelected();
+}
 
 const connectButton = document.getElementById('connectButton');
 
 const onConnect = () => {
-    console.log('connected');
     connectButton.innerHTML = 'connected';
     connectButton.style.borderColor = 'lime';
 }
@@ -132,13 +128,12 @@ const onTwist = (turn) => {
     cube.move(turn);
 
     if (cube.isSolved()) {
-        console.log('solved!');
         setMessage('solved!', 1);
         cube.shouldUpdateSVG = true;
         cube.clearHistory();
         cube.reset();
         setTimeout(() => {
-            random2GLL();
+            randomFromSelected();
             clearMessage();
         }, 500);
     } else {
@@ -158,12 +153,3 @@ connectButton.addEventListener('click', () => {
     BtCube.connect(onConnect, onTwist, onError);
     connectButton.innerHTML = 'connecting...';
 })
-
-/*
-
-position: absolute;
-    top: 40px;
-    left: 50%;
-    transform: translate(-50%, -50%);
-
-    */

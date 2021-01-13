@@ -1,0 +1,84 @@
+.expanding .head {
+    border: 1px solid white;
+    border-radius: 3px;
+    padding: 8px 5px;
+    cursor: pointer;
+    display: flex;
+}
+
+.expanding .head > div {
+    flex: 1;
+}
+
+.expanding .head .checkbox {
+    margin-left: 8px;
+
+}
+
+.expanding .head .chevron {
+    flex: none;
+    margin-right: 10px;
+}
+
+.expanding .head .subTitle {
+    text-align: right;
+    margin-right: 4px;
+}
+
+.expanding .head .algCount {
+    display: flex;
+    flex-direction: row;
+    text-align: left;
+    margin-left: 4px;
+    opacity: 0.7;
+    font-size: 14px;
+}
+
+.expanding .body {
+    border: 1px solid white;
+    border-top-width: 0;
+    border-radius: 3px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    padding: 5px;
+    display: none;
+    width: 92%;
+    margin: auto;
+}
+
+.expanding .body .cubesWrapper {
+    display: flex;
+    flex-wrap: wrap;
+    margin: auto;
+    justify-content: center;
+}
+
+.cubeImgBox {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin: 5px;
+    cursor: pointer;
+}
+
+.cubeImg {
+    height: 80px;
+    width: 80px;
+    
+}
+
+.cubeImgBox.active {
+    background-color: green;
+}
+
+.visible {
+    display: block !important; 
+}
+
+.setTitle {
+    margin: 10px 0px 7px 0px;
+}
+
+.subWrapper, .subsubWrapper {
+    margin: 5px 0px 10px 0px;
+}
+
