@@ -27,7 +27,7 @@ const selectAlg = (code) => {
         section[part]['count']++
 
         codeSoFar += (i == 0 ? part : '-' + part);
-        Array.from(document.querySelectorAll(`.${codeSoFar}`)).forEach(element => {
+        Array.from(document.querySelectorAll(`#${codeSoFar}`)).forEach(element => {
             element.innerHTML = section[part]['count'];
         })
 
@@ -46,7 +46,7 @@ const removeAlg = (code) => {
         section[part]['count']--
 
         codeSoFar += (i == 0 ? part : '-' + part);
-        Array.from(document.querySelectorAll(`.${codeSoFar}`)).forEach(element => {
+        Array.from(document.querySelectorAll(`#${codeSoFar}`)).forEach(element => {
             element.innerHTML = section[part]['count'];
         })
 
@@ -179,7 +179,6 @@ const initExpandingCards = () => {
 
         if (count == total) {
             checkbox.checked = true;
-            console.log('boop')
         }
 
         checkbox.addEventListener('click', (e) => {
