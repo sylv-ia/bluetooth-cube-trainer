@@ -129,6 +129,7 @@ const onTwist = (turn) => {
 
     if (cube.isSolved()) {
         setMessage('solved!', 1);
+        document.getElementById('tempCounter').innerHTML++;
         cube.shouldUpdateSVG = true;
         cube.clearHistory();
         cube.reset();
