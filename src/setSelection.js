@@ -239,6 +239,3 @@ let selectedCount = {};
 getSelected()
 initSets(sets);
 initExpandingCards();
-
-
-

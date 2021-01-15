@@ -16,7 +16,7 @@ body {
 
 .sidebar {
     background-color: #222;
-    flex: 1;
+    flex: 1.2;
     text-align: center;
     padding: 20px;
     min-height: 100vh;

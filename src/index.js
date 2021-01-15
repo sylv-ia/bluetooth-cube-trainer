@@ -106,8 +106,9 @@ const clearMessage = () => {
 
 const randomFromSelected = () => {
     const algCode = randomFromArray(selected);
+    const randomU = ' U '.repeat(Math.floor(Math.random() * 4));
     const alg = getAlg(algCode);
-    cube.setUpCase(alg);
+    cube.setUpCase(alg + randomU);
 }
 
 cube.init();
