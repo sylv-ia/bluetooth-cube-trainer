@@ -31,6 +31,7 @@ const cube = {
         cube.cube.move(Cube.inverse(turns));
         cube.updateSVG();
         cube.currentCase = turns;
+        cube.currentCode = code;
         cube.currentSet = code.split('-')[0];
     },
     reset: () => {
@@ -65,10 +66,9 @@ const cube = {
             && history[2] == 'U'
             && history[3] == 'U'
         ) {
-            console.log('reset');
             cube.shouldUpdateSVG = true;
             cube.reset();
-            cube.setUpCase(cube.currentCase);
+            cube.setUpCase(cube.currentCase, cube.currentCode);
             cube.clearHistory();
             return;
         } else if (history[0] == 'D'
@@ -139,6 +139,7 @@ const onSolved = () => {
 
 const matchState = (cube, pattern) => {
     const state = cube.asString()
+    console.log(state)
     for (let i = 0; i < pattern.length; i++) {
         if (pattern[i] != '.' && pattern[i] != state[i]) return false;
     }
