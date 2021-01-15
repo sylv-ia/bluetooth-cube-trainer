@@ -1,6 +1,14 @@
 const sets = {
-    'ZBLL': zbll
+    'ZBLL': zbll,
+    'ZBLS': zbls
 };
+
+const setsConfig = {
+    'ZBLS': {
+        'img': `http://cube.rider.biz/visualcube.php?fmt=png&stage=vh&bg=t&case=$alg`,
+        'solveState': '.U.U.U.U'
+    }
+}
 
 const getAlg = (code) => {
     const parts = code.split('-');
@@ -98,12 +106,18 @@ const createCubeImgElements = (algs, code = '') => {
     const cubesWrapper = document.createElement('div');
     cubesWrapper.classList.add('cubesWrapper')
 
+    const codeParts = code.split('-');
+
     algs.forEach((alg, i) => {
         const cubeImgBox = document.createElement('div');
         cubeImgBox.classList.add('cubeImgBox')
         const cubeImg = document.createElement('img');
         cubeImg.classList.add('cubeImg')
-        cubeImg.src = `http://www.cubing.net/api/visualcube/?fmt=svg&view=plan&bg=t&case=${alg}`;
+        if (setsConfig[codeParts[0]]) {
+            cubeImg.src = setsConfig[codeParts[0]].img.replace('$alg', alg);
+        } else {
+            cubeImg.src = `http://www.cubing.net/api/visualcube/?fmt=svg&view=plan&bg=t&case=${alg}`;
+        }
         cubeImgBox.append(cubeImg);
         const algCode = `${code}-${i}`;
         if (selected.includes(algCode)) cubeImgBox.classList.add('active');
@@ -117,7 +131,7 @@ const createCubeImgElements = (algs, code = '') => {
                 selectAlg(algCode);
             }
         })
-        
+
         cubesWrapper.append(cubeImgBox);
 
     })

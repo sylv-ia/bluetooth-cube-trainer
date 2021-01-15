@@ -27,10 +27,11 @@ const cube = {
         cube.cube = new Cube();
 
     },
-    setUpCase: (turns) => {
+    setUpCase: (turns, code = '') => {
         cube.cube.move(Cube.inverse(turns));
         cube.updateSVG();
         cube.currentCase = turns;
+        cube.currentSet = code.split('-')[0];
     },
     reset: () => {
         cube.cube.identity();
@@ -105,10 +106,11 @@ const clearMessage = () => {
 }
 
 const randomFromSelected = () => {
+    cube.reset()
     const algCode = randomFromArray(selected);
     const randomU = ' U '.repeat(Math.floor(Math.random() * 4));
     const alg = getAlg(algCode);
-    cube.setUpCase(alg + randomU);
+    cube.setUpCase(alg + randomU, algCode);
 }
 
 cube.init();
@@ -124,20 +126,34 @@ const onConnect = () => {
     connectButton.style.borderColor = 'lime';
 }
 
+const onSolved = () => {
+    setMessage('solved!', 1);
+    document.getElementById('tempCounter').innerHTML++;
+    cube.shouldUpdateSVG = true;
+    cube.clearHistory();
+    setTimeout(() => {
+        randomFromSelected();
+        clearMessage();
+    }, 500);
+}
+
+const matchState = (cube, pattern) => {
+    const state = cube.asString()
+    for (let i = 0; i < pattern.length; i++) {
+        if (pattern[i] != '.' && pattern[i] != state[i]) return false;
+    }
+    return true;
+}
+
 const onTwist = (turn) => {
 
     cube.move(turn);
 
-    if (cube.isSolved()) {
-        setMessage('solved!', 1);
-        document.getElementById('tempCounter').innerHTML++;
-        cube.shouldUpdateSVG = true;
-        cube.clearHistory();
-        cube.reset();
-        setTimeout(() => {
-            randomFromSelected();
-            clearMessage();
-        }, 500);
+    if ((setsConfig[cube.currentSet]
+        && setsConfig[cube.currentSet].solveState
+        && matchState(cube.cube, setsConfig[cube.currentSet].solveState))
+        || cube.isSolved()) {
+        onSolved()
     } else {
         cube.checkCommands();
     }
