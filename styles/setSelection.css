@@ -10,6 +10,14 @@
     display: flex;
 }
 
+.expanding .head.all {
+    background-color: green;
+}
+
+.expanding .head.some {
+    background-color: #E18700;
+}
+
 .expanding .head > div {
     flex: 1;
 }
@@ -22,6 +30,15 @@
 .expanding .head .chevron {
     flex: none;
     margin-right: 10px;
+    height: 16px;
+}
+
+.expanding .head .chevron.up {
+    transform: rotate(180deg);
+}
+
+.expanding .head.some .chevron, .expanding .head.all .chevron {
+    height: 17px;
 }
 
 .expanding .head .subTitle {
@@ -85,4 +102,3 @@
 .subWrapper, .subsubWrapper {
     margin: 5px 0px 10px 0px;
 }
-

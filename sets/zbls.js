@@ -378,5 +378,9 @@ const zbls = {
   "40": [
     "U R U' R' F R U R' U' F' R U' R' ",
     "r U' r' U2 r U r' R U R' "
+  ],
+  "41": [
+    "U' R U R' F U R U' R' F' R U R'",
+    "R U' M' U' r' U2 r U r'"
   ]
 }

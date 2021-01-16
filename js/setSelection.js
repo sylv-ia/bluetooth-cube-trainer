@@ -28,11 +28,14 @@ const getSelected = () => {
 
 const updateCountColors = (element, counter) => {
     if (counter.count == counter.total) {
-        element.style.backgroundColor = 'green';
+        element.classList.remove('some');
+        element.classList.add('all');
     } else if (counter.count > 0) {
-        element.style.backgroundColor = '#E18700';
+        element.classList.remove('all');
+        element.classList.add('some');
     } else {
-        element.style.backgroundColor = 'transparent';
+        element.classList.remove('all');
+        element.classList.remove('some');
     }
 }
 
@@ -194,6 +197,12 @@ const initSets = (sets) => {
     setSelecion.append(setsElements);
 }
 
+const chevronElement = () => {
+    const chevron = createElementWithClasses('img', ['chevron']);
+    chevron.src = './img/down-chevron.svg'
+    return chevron;
+}
+
 const initExpandingCards = () => {
     const expandingCardHeads = document.querySelectorAll('.expanding .head');
     Array.from(expandingCardHeads).forEach(head => {
@@ -225,9 +234,7 @@ const initExpandingCards = () => {
             }
 
         })
-        const chevron = document.createElement('div');
-        chevron.classList.add('chevron');
-        chevron.innerHTML = 'v';
+        const chevron = chevronElement();
         head.prepend(checkbox);
         head.append(chevron);
         head.addEventListener('mousedown', function (event) {
@@ -239,10 +246,10 @@ const initExpandingCards = () => {
             const body = head.parentNode.querySelector('.body');
             if (body.classList.contains('visible')) {
                 body.classList.remove('visible');
-                chevron.innerHTML = 'v';
+                chevron.classList.remove('up')
             } else {
                 body.classList.add('visible');
-                chevron.innerHTML = 'ʌ';
+                chevron.classList.add('up')
             }
         });
     })
