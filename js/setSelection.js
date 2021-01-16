@@ -206,7 +206,7 @@ const chevronElement = () => {
 const initExpandingCards = () => {
     const expandingCardHeads = document.querySelectorAll('.expanding .head');
     Array.from(expandingCardHeads).forEach(head => {
-        const checkbox = document.createElement('input');
+        const checkbox = document.createElement('div');
         checkbox.type = 'checkbox';
         checkbox.classList.add('checkbox');
 
@@ -220,16 +220,22 @@ const initExpandingCards = () => {
         checkbox.addEventListener('click', (e) => {
             e.stopPropagation();
 
+            if (checkbox.classList.contains('checked')) {
+                checkbox.classList.remove('checked')
+            } else {
+                checkbox.classList.add('checked')
+            }
+
             const innerCheckboxes = checkbox.parentNode.parentNode.querySelectorAll('.checkbox');
 
             if (innerCheckboxes.length > 1) {
                 Array.from(innerCheckboxes).forEach(innerBox => {
-                    if (innerBox.checked != checkbox.checked) innerBox.click();
+                    if (innerBox.classList.contains('checked') != checkbox.classList.contains('checked')) innerBox.click();
                 })
             } else {
                 const cubeImgs = checkbox.parentNode.parentNode.querySelectorAll('.cubeImgBox');
                 Array.from(cubeImgs).forEach(cubeImg => {
-                    if (cubeImg.classList.contains('active') != checkbox.checked) cubeImg.click();
+                    if (cubeImg.classList.contains('active') != checkbox.classList.contains('checked')) cubeImg.click();
                 });
             }
 

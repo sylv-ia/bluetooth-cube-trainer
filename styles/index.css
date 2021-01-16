@@ -57,5 +57,30 @@ body {
     width: 400px;
 }
 
+.checkbox {
+    width: 16px;
+    height: 16px;
+    border: 2px solid #eee;
+    border-radius: 3px;
+    background-color: transparent;
+}
 
+.checkbox.checked {
+    background-color: #eee;
+}
 
+.checkbox.checked:after {
+    content: "";
+    display: block;
+    width: 5px;
+    height: 10px;
+    border: solid black;
+    border-width: 0 3px 3px 0; 
+    border-radius: 2px;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+    position: relative;
+    top: 0px;
+    left: 4px;
+}
