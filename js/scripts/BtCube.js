@@ -1,8 +1,7 @@
-// modified version of AshleyF's code from https://github.com/AshleyF/briefcubing
+// modified version of AshleyF's code from https://github.com/AshleyF/briefcubing 
+// and cs0x7f's code from https://github.com/cs0x7f/cstimer
 
-let BtCube = (function () {
-    const GIIKER_SERVICE_UUID = "0000aadb-0000-1000-8000-00805f9b34fb";
-    const GIIKER_CHARACTERISTIC_UUID = "0000aadc-0000-1000-8000-00805f9b34fb";
+const BtCube = (function () {
 
     const GAN_SERVICE_UUID = "0000fff0-0000-1000-8000-00805f9b34fb";
     const GAN_CHARACTERISTIC_UUID = "0000fff5-0000-1000-8000-00805f9b34fb";
@@ -13,24 +12,61 @@ let BtCube = (function () {
         "NoRgnAHANATADDWJYwMxQOxiiEcfYgSK6Hpr4TYCs0IG1OEAbDszALpA",
         "NoNg7ANATFIQnARmogLBRUCs0oAYN8U5J45EQBmFADg0oJAOSlUQF0g"];
 
-    //Used for GoCube and Rubiks Connected    
+    // --
+    let _chrct_f7;
+
+    const UUID_SUFFIX = '-0000-1000-8000-00805f9b34fb';
+    const SERVICE_UUID_META = '0000180a' + UUID_SUFFIX;
+    const CHRCT_UUID_VERSION = '00002a28' + UUID_SUFFIX;
+    const CHRCT_UUID_HARDWARE = '00002a23' + UUID_SUFFIX;
+    const SERVICE_UUID_DATA = '0000fff0' + UUID_SUFFIX;
+    const CHRCT_UUID_F2 = '0000fff2' + UUID_SUFFIX; // cube state, (54 - 6) facelets, 3 bit per facelet
+    const CHRCT_UUID_F3 = '0000fff3' + UUID_SUFFIX; // prev moves
+    const CHRCT_UUID_F5 = '0000fff5' + UUID_SUFFIX; // gyro state, move counter, pre moves
+    const CHRCT_UUID_F6 = '0000fff6' + UUID_SUFFIX; // move counter, time offsets between premoves
+    const CHRCT_UUID_F7 = '0000fff7' + UUID_SUFFIX;
+    // --
+
+    const GIIKER_SERVICE_UUID = "0000aadb-0000-1000-8000-00805f9b34fb";
+    const GIIKER_CHARACTERISTIC_UUID = "0000aadc-0000-1000-8000-00805f9b34fb";
+
     const GOCUBE_SERVICE_UUID = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
     const GOCUBE_CHARACTERISTIC_UUID = "6e400003-b5a3-f393-e0a9-e50e24dcca9e";
 
     let device;
+    let deviceName = 'boop';
     let ganDecoder = null;
+
+    function decode(value) {
+        let ret = [];
+        for (let i = 0; i < value.byteLength; i++) {
+            ret[i] = value.getUint8(i);
+        }
+        if (ganDecoder == null) {
+            return ret;
+        }
+        if (ret.length > 16) {
+            ret = ret.slice(0, ret.length - 16).concat(
+                ganDecoder.decrypt(ret.slice(ret.length - 16))
+            );
+        }
+        ganDecoder.decrypt(ret);
+        return ret;
+    }
+
     async function connect(connectedCallback, twistCallback, errorCallback) {
         try {
             device = await window.navigator.bluetooth.requestDevice({
-            filters: [{ namePrefix: "Gi" }, { namePrefix: "GAN-" }, { namePrefix: "GoCube_" }, { namePrefix: "Rubiks_" }],
-            optionalServices: [
-                GIIKER_SERVICE_UUID,
-                GAN_SERVICE_UUID, GAN_SERVICE_UUID_META,
-                GOCUBE_SERVICE_UUID
-            ]
+                filters: [{ namePrefix: "Gi" }, { namePrefix: "GAN-" }, { namePrefix: "GoCube_" }, { namePrefix: "Rubiks_" }],
+                optionalServices: [
+                    GIIKER_SERVICE_UUID,
+                    GAN_SERVICE_UUID, GAN_SERVICE_UUID_META,
+                    GOCUBE_SERVICE_UUID
+                ]
             });
             let server = await device.gatt.connect();
-            if (server.device.name.startsWith("GAN-")) {
+            deviceName = server.device.name;
+            if (deviceName.startsWith("GAN-")) {
                 ganDecoder = null;
                 let meta = await server.getPrimaryService(GAN_SERVICE_UUID_META);
                 let versionCharacteristic = await meta.getCharacteristic(GAN_CHARACTERISTIC_VERSION);
@@ -53,19 +89,21 @@ let BtCube = (function () {
                 }
                 let cubeService = await server.getPrimaryService(GAN_SERVICE_UUID);
                 let cubeCharacteristic = await cubeService.getCharacteristic(GAN_CHARACTERISTIC_UUID);
+                _chrct_f7 = await cubeService.getCharacteristic(CHRCT_UUID_F7);
+                
                 onPollGanCubeCharacteristic(cubeCharacteristic, twistCallback);
-            } else if (server.device.name.startsWith("Gi")) {
+            } else if (deviceName.startsWith("Gi")) {
                 let cubeService = await server.getPrimaryService(GIIKER_SERVICE_UUID);
                 let cubeCharacteristic = await cubeService.getCharacteristic(GIIKER_CHARACTERISTIC_UUID);
                 cubeCharacteristic.addEventListener("characteristicvaluechanged", onGiikerCubeCharacteristicChanged.bind(twistCallback));
                 await cubeCharacteristic.startNotifications();
-            } else if (server.device.name.startsWith("GoCube_") || server.device.name.startsWith("Rubiks_")) {
+            } else if (deviceName.startsWith("GoCube_") || deviceName.startsWith("Rubiks_")) {
                 let cubeService = await server.getPrimaryService(GOCUBE_SERVICE_UUID);
                 let cubeCharacteristic = await cubeService.getCharacteristic(GOCUBE_CHARACTERISTIC_UUID);
                 cubeCharacteristic.addEventListener("characteristicvaluechanged", onGoCubeCharacteristicChanged.bind(twistCallback));
                 await cubeCharacteristic.startNotifications();
             } else {
-                throw "Unknown device: " + server.device.name;
+                throw "Unknown device: " + deviceName;
             }
 
             device.addEventListener('gattserverdisconnected', disconnected.bind(errorCallback));
@@ -130,8 +168,7 @@ let BtCube = (function () {
         try {
             const twists = ["U", "?", "U'", "R", "?", "R'", "F", "?", "F'", "D", "?", "D'", "L", "?", "L'", "B", "?", "B'"]
             let val;
-            try
-            {
+            try {
                 val = await cubeCharacteristic.readValue();
                 if (ganDecoder != null) {
                     let decoded = [];
@@ -159,12 +196,12 @@ let BtCube = (function () {
                     }
                 }
             }
-            window.setTimeout(async function() { await onPollGanCubeCharacteristic(cubeCharacteristic, twistCallback); }, 50);
+            window.setTimeout(async function () { await onPollGanCubeCharacteristic(cubeCharacteristic, twistCallback); }, 50);
         } catch (ex) {
             alert("ERROR (G): " + ex.message);
         }
     }
-    
+
     function onGoCubeCharacteristicChanged(event) {
         try {
             let val = event.target.value;
@@ -177,14 +214,29 @@ let BtCube = (function () {
         }
     }
 
+    const getBattery = async () => {
+        if (deviceName.startsWith('GAN-')) {
+            const value = await _chrct_f7.readValue()
+            const decoded = decode(value);
+            return decoded[7];
+        } 
+        return null
+    }
+
+    const name = () => {
+        return deviceName;
+    }
+
     return {
         connect: connect,
         connected: connected,
-        disconnect: disconnect
+        disconnect: disconnect,
+        getBattery: getBattery,
+        name: name,
     };
 }());
 
-let aes128 = (function() {
+let aes128 = (function () {
     let sbox = [99, 124, 119, 123, 242, 107, 111, 197, 48, 1, 103, 43, 254, 215, 171, 118, 202, 130, 201, 125, 250, 89, 71, 240, 173, 212, 162, 175, 156, 164, 114, 192, 183, 253, 147, 38, 54, 63, 247, 204, 52, 165, 229, 241, 113, 216, 49, 21, 4, 199, 35, 195, 24, 150, 5, 154, 7, 18, 128, 226, 235, 39, 178, 117, 9, 131, 44, 26, 27, 110, 90, 160, 82, 59, 214, 179, 41, 227, 47, 132, 83, 209, 0, 237, 32, 252, 177, 91, 106, 203, 190, 57, 74, 76, 88, 207, 208, 239, 170, 251, 67, 77, 51, 133, 69, 249, 2, 127, 80, 60, 159, 168, 81, 163, 64, 143, 146, 157, 56, 245, 188, 182, 218, 33, 16, 255, 243, 210, 205, 12, 19, 236, 95, 151, 68, 23, 196, 167, 126, 61, 100, 93, 25, 115, 96, 129, 79, 220, 34, 42, 144, 136, 70, 238, 184, 20, 222, 94, 11, 219, 224, 50, 58, 10, 73, 6, 36, 92, 194, 211, 172, 98, 145, 149, 228, 121, 231, 200, 55, 109, 141, 213, 78, 169, 108, 86, 244, 234, 101, 122, 174, 8, 186, 120, 37, 46, 28, 166, 180, 198, 232, 221, 116, 31, 75, 189, 139, 138, 112, 62, 181, 102, 72, 3, 246, 14, 97, 53, 87, 185, 134, 193, 29, 158, 225, 248, 152, 17, 105, 217, 142, 148, 155, 30, 135, 233, 206, 85, 40, 223, 140, 161, 137, 13, 191, 230, 66, 104, 65, 153, 45, 15, 176, 84, 187, 22];
     let sboxI = [];
     let shiftTabI = [0, 13, 10, 7, 4, 1, 14, 11, 8, 5, 2, 15, 12, 9, 6, 3];
@@ -221,7 +273,7 @@ let aes128 = (function() {
             state[i] = sboxI[state0[shiftTabI[i]]] ^ rkey[i];
         }
     }
-    AES128.prototype.decrypt = function(block) {
+    AES128.prototype.decrypt = function (block) {
         let rkey = this.key.slice(160, 176);
         for (let i = 0; i < 16; i++) {
             block[i] ^= rkey[i];

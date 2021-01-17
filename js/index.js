@@ -121,9 +121,11 @@ if (selected.length != 0) {
 
 const connectButton = document.getElementById('connectButton');
 
-const onConnect = () => {
+const onConnect = async () => {
     connectButton.innerHTML = 'connected';
     connectButton.style.borderColor = 'lime';
+    const b = await BtCube.getBattery()
+    console.log(BtCube.name(), b)
 }
 
 const onSolved = () => {
