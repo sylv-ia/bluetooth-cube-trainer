@@ -121,11 +121,16 @@ if (selected.length != 0) {
 
 const connectButton = document.getElementById('connectButton');
 
+const updateBattery = async() => {
+    const level = await BtCube.getBattery();
+    document.getElementById('battery').textContent = level + '%';
+}
+
 const onConnect = async () => {
     connectButton.innerHTML = 'connected';
     connectButton.style.borderColor = 'lime';
-    const b = await BtCube.getBattery()
-    console.log(BtCube.name(), b)
+    updateBattery()
+    setInterval(() => updateBattery(), 60 * 1000)
 }
 
 const onSolved = () => {

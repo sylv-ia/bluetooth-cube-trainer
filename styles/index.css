@@ -37,7 +37,7 @@ body {
     padding: 10px 20px;
     border-radius: 15px;
     cursor: pointer;
-    margin: auto;
+    margin: 0px auto 20px;
 }
 
 #message {
