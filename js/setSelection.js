@@ -1,6 +1,7 @@
 const sets = {
     'ZBLL': zbll,
-    'ZBLS': zbls
+    'ZBLS': zbls,
+    'PLL': pll
 };
 
 const setsConfig = {
