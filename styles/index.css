@@ -63,6 +63,7 @@ body {
     border: 2px solid #eee;
     border-radius: 3px;
     background-color: transparent;
+    flex: none !important;
 }
 
 .checkbox.checked {
@@ -83,4 +84,45 @@ body {
     position: relative;
     top: 0px;
     left: 4px;
+}
+
+#rightOptions {
+    font-size: 14px;
+    margin: auto;
+    margin-top: 20px;
+    width: 50%;
+}
+
+#tempCounter {
+    margin-bottom: 40px;
+    font-size: 15px;
+    text-align: center;
+}
+
+.inputContainer {
+    flex-direction: row;
+    display: flex;
+    margin: auto;
+    margin-top: 12px;
+    margin-bottom: 12px;
+    width: 150px;
+}
+
+.inputContainer div {
+   margin-left: 10px;
+   margin-right: 10px;
+   display: inline-block;
+   align-self: flex-end;
+}
+
+.inputContainer .checkbox {
+    margin-right: 0px;
+}
+
+#setAUF.disabled .label {
+    opacity: 0.5;
+}
+
+#AUF {
+    text-align-last:center;
 }

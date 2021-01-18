@@ -79,11 +79,49 @@ const cube = {
             cube.shouldUpdateSVG = true;
             cube.clearHistory();
             cube.reset();
-            randomFromSelected();
+            cube.randomFromSelected();
             clearMessage();
         }
-
     },
+    randomAUF: false,
+    setAUF: '',
+    randomFromSelected: () => {
+        cube.reset()
+        const algCode = randomFromArray(selected);
+        const randomU = ' U '.repeat(Math.floor(Math.random() * 4));
+        const alg = getAlg(algCode);
+        let auf = ''
+
+        if (cube.randomAUF) {
+            auf = randomFromArray(['', ' U ', ' U\' ', ' U2 ' ]);
+        } else if (cube.setAUF) {
+            auf = ` ${cube.setAUF} `
+        }
+
+        cube.setUpCase(auf + alg + randomU, algCode);
+    },
+    onTwist: (turn) => {
+        cube.move(turn);
+
+        if ((setsConfig[cube.currentSet]
+            && setsConfig[cube.currentSet].solveState
+            && matchState(cube.cube, setsConfig[cube.currentSet].solveState))
+            || cube.isSolved()) {
+            cube.onSolved()
+        } else {
+            cube.checkCommands();
+        }
+    },
+    onSolved: () => {
+        setMessage('solved!', 1);
+        document.getElementById('tempCounter').innerHTML++;
+        cube.shouldUpdateSVG = true;
+        cube.clearHistory();
+        setTimeout(() => {
+            randomFromSelected();
+            clearMessage();
+        }, 500);
+    }
 }
 
 const setMessage = (message, positive) => {
@@ -105,18 +143,10 @@ const clearMessage = () => {
     messageDiv.innerHTML = '.';
 }
 
-const randomFromSelected = () => {
-    cube.reset()
-    const algCode = randomFromArray(selected);
-    const randomU = ' U '.repeat(Math.floor(Math.random() * 4));
-    const alg = getAlg(algCode);
-    cube.setUpCase(alg + randomU, algCode);
-}
-
 cube.init();
 
 if (selected.length != 0) {
-    randomFromSelected();
+    cube.randomFromSelected();
 }
 
 const connectButton = document.getElementById('connectButton');
@@ -133,17 +163,6 @@ const onConnect = async () => {
     setInterval(() => updateBattery(), 60 * 1000)
 }
 
-const onSolved = () => {
-    setMessage('solved!', 1);
-    document.getElementById('tempCounter').innerHTML++;
-    cube.shouldUpdateSVG = true;
-    cube.clearHistory();
-    setTimeout(() => {
-        randomFromSelected();
-        clearMessage();
-    }, 500);
-}
-
 const matchState = (cube, pattern) => {
     const state = cube.asString()
     console.log(state)
@@ -153,29 +172,13 @@ const matchState = (cube, pattern) => {
     return true;
 }
 
-const onTwist = (turn) => {
-
-    cube.move(turn);
-
-    if ((setsConfig[cube.currentSet]
-        && setsConfig[cube.currentSet].solveState
-        && matchState(cube.cube, setsConfig[cube.currentSet].solveState))
-        || cube.isSolved()) {
-        onSolved()
-    } else {
-        cube.checkCommands();
-    }
-
-}
-
 const onError = (error) => {
     console.log(error);
     connectButton.innerHTML = 'connect';
     connectButton.style.borderColor = 'white';
-
 }
 
 connectButton.addEventListener('click', () => {
-    BtCube.connect(onConnect, onTwist, onError);
+    BtCube.connect(onConnect, (turn) => cube.onTwist(turn), onError);
     connectButton.innerHTML = 'connecting...';
 })

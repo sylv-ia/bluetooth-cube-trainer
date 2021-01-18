@@ -206,9 +206,7 @@ const chevronElement = () => {
 const initExpandingCards = () => {
     const expandingCardHeads = document.querySelectorAll('.expanding .head');
     Array.from(expandingCardHeads).forEach(head => {
-        const checkbox = document.createElement('div');
-        checkbox.type = 'checkbox';
-        checkbox.classList.add('checkbox');
+        const checkbox = createElementWithClasses('div', ['checkbox', 'selection'])
 
         const countID = head.querySelector('.count').id;
         const [count, total] = getCount(countID);
@@ -218,6 +216,7 @@ const initExpandingCards = () => {
         }
 
         checkbox.addEventListener('click', (e) => {
+
             e.stopPropagation();
 
             if (checkbox.classList.contains('checked')) {
@@ -261,8 +260,8 @@ const initExpandingCards = () => {
     })
 }
 
-let selected = [];
-let selectedCount = {};
+let selected = []
+let selectedCount = {}
 getSelected()
-initSets(sets);
-initExpandingCards();
+initSets(sets)
+initExpandingCards()

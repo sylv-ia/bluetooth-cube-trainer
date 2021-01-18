@@ -326,7 +326,28 @@
     </div>
 
     <div id="rightbar" class="sidebar">
-      <div id="tempCounter">0</div>
+      <div id="rightOptions">
+        <div id="tempCounter">0</div>
+
+        <div class="inputContainer">
+          <div class="checkbox" id="randomAUF"></div>
+          <div class="label">random AUF</div>
+        </div>
+
+        <div class="inputContainer" id="setAUF">
+          <div class="label">set AUF: </div>
+          <select id="AUF">
+            <option value="none" selected>none</option>
+            <option value="U">U</option>
+            <option value="U'">U'</option>
+            <option value="U2">U2</option>
+          </select>
+        </div>
+
+
+
+      </div>
+
     </div>
 
 
@@ -343,7 +364,8 @@
   <script src="sets/zbls.js"></script>
 
   <script src="js/setSelection.js"></script>
-  <script src="js/index.js"></script>
+  <script src="js/cube.js"></script>
+  <script src="js/setOptions.js"></script>
 
 </body>
 
