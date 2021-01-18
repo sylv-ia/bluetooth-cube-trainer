@@ -118,7 +118,7 @@ const cube = {
         cube.shouldUpdateSVG = true;
         cube.clearHistory();
         setTimeout(() => {
-            randomFromSelected();
+            cube.randomFromSelected();
             clearMessage();
         }, 500);
     }
