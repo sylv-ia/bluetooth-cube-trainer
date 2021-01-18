@@ -3,7 +3,7 @@ const pll = {
         "U2 R2 U' R' U' R U R U R U' R"
     ],
     "Ub": [
-        "R' U R' U' R' U' R' U R U R2"
+        "U2 R' U R' U' R' U' R' U R U R2"
     ],
     "H": [
         "M2 U' M2 U2 M2 U' M2"
