@@ -95,7 +95,7 @@ const cube = {
         if (cube.randomAUF) {
             auf = randomFromArray(['', ' U ', ' U\' ', ' U2 ' ]);
         } else if (cube.setAUF) {
-            auf = ` ${cube.setAUF} `
+            auf = cube.setAUF == 'none' ? '' : ` ${cube.setAUF} `
         }
 
         cube.setUpCase(auf + alg + randomU, algCode);
