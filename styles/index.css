@@ -126,3 +126,11 @@ body {
 #AUF {
     text-align-last:center;
 }
+
+.infoBox {
+    margin-bottom: 50px;
+}
+
+.infoBox .infoLine {
+    margin-top: 10px;
+}
