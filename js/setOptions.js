@@ -13,6 +13,12 @@ const getSavedOptions = () => {
     const setAUFValue = localStorage.getItem('setAUF');
     if (setAUFValue) AUFpicker.value = setAUFValue;
 
+    const nextImmediate = localStorage.getItem('nextImmediate')
+    if (nextImmediate == 'false') {
+        toggleNextImmediate(false)
+        nextCaseImmediately.classList.remove('checked')
+    }
+
 }
 
 const toggleRandomAUF = (value) => {
@@ -29,8 +35,9 @@ const toggleRandomAUF = (value) => {
 
 }
 
-const toggleNextImmediate = () => {
-
+const toggleNextImmediate = (value) => {
+    cube.nextImmediate = value
+    localStorage.setItem('nextImmediate', value)
 }
 
 const initInput = () => {
@@ -41,7 +48,7 @@ const initInput = () => {
                 toggleRandomAUF(checked)
                 break;
             case 'nextCaseImmediately':
-
+                toggleNextImmediate(checked)
                 break;
         }
     }

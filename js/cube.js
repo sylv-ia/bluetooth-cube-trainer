@@ -84,6 +84,7 @@ const cube = {
     },
     randomAUF: false,
     setAUF: '',
+    nextImmediate: true,
     randomFromSelected: () => {
         cube.reset()
         const algCode = randomFromArray(selected);
@@ -98,26 +99,29 @@ const cube = {
         }
 
         cube.setUpCase(auf + alg + randomU, algCode);
+        cube.wasSolved = false
     },
+    wasSolved: true,
     onTwist: (turn) => {
         cube.move(turn);
 
         if ((setsConfig[cube.currentSet]
             && setsConfig[cube.currentSet].solveState
             && matchState(cube.cube, setsConfig[cube.currentSet].solveState))
-            || cube.isSolved()) {
+            || (!cube.wasSolved && cube.isSolved())) {
             cube.onSolved()
         } else {
             cube.checkCommands();
         }
     },
     onSolved: () => {
+        cube.wasSolved = true;
         setMessage('solved!', 1);
         document.getElementById('tempCounter').innerHTML++;
         cube.clearHistory();
         setTimeout(() => {
-            cube.randomFromSelected();
             clearMessage();
+            if (cube.nextImmediate) cube.randomFromSelected();
         }, 500);
     }
 }
