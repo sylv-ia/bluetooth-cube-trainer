@@ -134,3 +134,17 @@ body {
 .infoBox .infoLine {
     margin-top: 10px;
 }
+
+.row {
+    display: inline-flex;
+}
+
+.button {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 5px;
+}
+
+.button div {
+    padding: 0px 5px; 
+}

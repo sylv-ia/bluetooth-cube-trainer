@@ -39,25 +39,19 @@ const cube = {
         cube.updateSVG();
     },
     move: (turns) => {
-        cube.cube.move(turns);
-        if (turns != "U" && turns != "U'") {
-            //cube.shouldUpdateSVG = false;
-        }
+        cube.cube.move(turns)
         cube.updateSVG();
         cube.history = [...cube.history, ...turns.split(' ')];
     },
     updateSVG: () => {
-        if (cube.shouldUpdateSVG) {
-            const asString = cube.cube.asString();
-            cube.stickers.forEach((sticker, i) => sticker.style.fill = cube.colors[asString[i]]);
-        }
+        const asString = cube.cube.asString();
+        cube.stickers.forEach((sticker, i) => sticker.style.fill = cube.colors[asString[i]]);
     },
     isSolved: () => (cube.cube.isSolved()),
     history: [],
     clearHistory: () => {
         cube.history = [];
     },
-    shouldUpdateSVG: true,
     checkCommands: () => {
         const history = cube.history.slice().reverse();
 
@@ -66,21 +60,26 @@ const cube = {
             && history[2] == 'U'
             && history[3] == 'U'
         ) {
-            cube.shouldUpdateSVG = true;
             cube.reset();
             cube.setUpCase(cube.currentCase, cube.currentCode);
             cube.clearHistory();
+            setMessage('case reset')
+            setTimeout(() => {
+                clearMessage();
+            }, 500);
             return;
         } else if (history[0] == 'D'
             && history[1] == 'D'
             && history[2] == 'D'
             && history[3] == 'D'
         ) {
-            cube.shouldUpdateSVG = true;
             cube.clearHistory();
             cube.reset();
+            setMessage('next case')
             cube.randomFromSelected();
-            clearMessage();
+            setTimeout(() => {
+                clearMessage();
+            }, 500);
         }
     },
     randomAUF: false,
@@ -93,7 +92,7 @@ const cube = {
         let auf = ''
 
         if (cube.randomAUF) {
-            auf = randomFromArray(['', ' U ', ' U\' ', ' U2 ' ]);
+            auf = randomFromArray(['', ' U ', ' U\' ', ' U2 ']);
         } else if (cube.setAUF) {
             auf = cube.setAUF == 'none' ? '' : ` ${cube.setAUF} `
         }
@@ -115,7 +114,6 @@ const cube = {
     onSolved: () => {
         setMessage('solved!', 1);
         document.getElementById('tempCounter').innerHTML++;
-        cube.shouldUpdateSVG = true;
         cube.clearHistory();
         setTimeout(() => {
             cube.randomFromSelected();
@@ -128,13 +126,9 @@ const setMessage = (message, positive) => {
     const messageDiv = document.getElementById('message');
     messageDiv.innerHTML = message;
     messageDiv.style.opacity = 1;
-    if (positive != null) {
-        if (positive) {
-            messageDiv.style.color = 'lime';
-        } else {
-            messageDiv.style.color = 'red';
-        }
-    }
+    console.log(positive != null ? (positive ? 'lime' : 'red') : 'white')
+    messageDiv.style.color = positive != null ? (positive ? 'lime' : 'red') : 'white'
+
 }
 
 const clearMessage = () => {
@@ -151,7 +145,7 @@ if (selected.length != 0) {
 
 const connectButton = document.getElementById('connectButton');
 
-const updateBattery = async() => {
+const updateBattery = async () => {
     const level = await BtCube.getBattery();
     document.getElementById('battery').textContent = level + '%';
 }

@@ -1,6 +1,8 @@
 const setAUF = document.getElementById('setAUF')
 const AUFpicker = document.getElementById('AUF')
 
+const nextCaseImmediately = document.getElementById('nextCaseImmediately')
+
 const getSavedOptions = () => {
     const randomAUF = localStorage.getItem('randomAUF')
     if (randomAUF == 'true') {
@@ -27,6 +29,10 @@ const toggleRandomAUF = (value) => {
 
 }
 
+const toggleNextImmediate = () => {
+
+}
+
 const initInput = () => {
 
     const onInput = (element, checked) => {
@@ -34,7 +40,9 @@ const initInput = () => {
             case 'randomAUF':
                 toggleRandomAUF(checked)
                 break;
+            case 'nextCaseImmediately':
 
+                break;
         }
     }
 
