@@ -15,7 +15,7 @@ body {
 }
 
 .sidebar {
-    background-color: #222;
+    background-color: #171717;
     flex: 1.2;
     text-align: center;
     padding: 20px;
@@ -143,8 +143,39 @@ body {
     border: 1px solid #ddd;
     border-radius: 10px;
     padding: 5px;
+    font-size: 14px;
+    margin: 0 10px;
+    cursor: pointer;
 }
 
 .button div {
     padding: 0px 5px; 
+}
+
+.title {
+    border-bottom: 1px solid white;
+    padding: 3px 5px;
+    margin: 12px 0px;
+    display: inline-flex;
+}
+
+.textInput {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #ddd;
+    text-align: center;
+    height: 22;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    margin: 0 10px;
+    box-shadow: none;
+    border: none;
+    border-bottom: 1px solid white;
+}
+
+.textInput:focus {
+    background-color: rgba(255, 255, 255, 0.15);
+    box-shadow: none;
+    border: none;
+    outline: 0;
+    border-bottom: 1.5px solid hotpink;
 }
